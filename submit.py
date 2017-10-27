@@ -26,8 +26,8 @@ def get_course():
     course = input('Course: ')
 
     cursor = MySQLdb.connect(user='root', db='mkds').cursor()
-    cursor.execute("""SELECT * FROM course""")
-    courses = [item[1] for item in cursor.fetchall()]
+    cursor.execute("""SELECT course FROM course""")
+    courses = [item[0] for item in cursor.fetchall()]
 
     if course not in courses:
         print("Error: invalid course {}".format(course))
