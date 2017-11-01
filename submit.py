@@ -59,16 +59,69 @@ def get_time():
 def get_comment():
     return input('Comment: ')
 
+# return (time,standard,pts,date) of the requested PR
+def get_pr(course, t):
+    query_pr = ("SELECT time, standard, pts, date FROM PRs WHERE course=%s AND type=%s")
+    data_pr = (course, t)
 
+    db = MySQLdb.connect(user="root", db="mkds")
+    c = db.cursor()
+    c.execute(query_pr, data_pr)
 
-# Data
-add_submission = ("INSERT INTO submission (date, course, type, time, comment) "
-                  "VALUES (%s, %s, %s, %s, %s)")
+    return c.fetchone()
 
-data_submission = (get_date(), get_course(), get_type(), get_time(), get_comment())
+# return (name, time) of requested standard
+def get_standard(course, t, pts):
+    query_standard = ("SELECT name, time FROM standard NATURAL JOIN standard_name WHERE course=%s AND type=%s AND pts=%s")
+    data_standard = (course, t, pts)
 
-# Insert new submission
-db = MySQLdb.connect(user="root", db="mkds")
-c = db.cursor()
-c.execute(add_submission, data_submission)
-db.commit()
+    db = MySQLdb.connect(user="root", db="mkds")
+    c = db.cursor()
+    c.execute(query_standard, data_standard)
+
+    return c.fetchone()
+
+##################################
+def m():
+    # gather data
+    query_add_submission = ("INSERT INTO submission (date, course, type, time, comment) "
+                      "VALUES (%s, %s, %s, %s, %s)")
+
+    date =          get_date()
+    course =        get_course()
+    record_type =   get_type()
+    time =          get_time()
+    comment =       get_comment()
+    data_submission = (date, course, record_type, time, comment)
+
+    # get old PR data
+    old_pr = get_pr(course, record_type)
+
+    # perform insert query
+    db = MySQLdb.connect(user="root", db="mkds")
+    c = db.cursor()
+    c.execute(query_add_submission, data_submission)
+    db.commit()
+
+    # get new PR data
+    new_pr = get_pr(course, record_type)
+    pts = new_pr[2]
+
+    # get standard data
+    standard0 = get_standard(course, record_type, pts)
+    standard1 = get_standard(course, record_type, pts-1)
+    standard2 = get_standard(course, record_type, pts-2)
+    standard3 = get_standard(course, record_type, pts-3)
+
+    # print infos
+    print("**\n")
+    print("Old PR: {}\t{}\t{}\t{}\n".format(old_pr[0], old_pr[1], old_pr[2], old_pr[3]))
+    print("New PR: {}\t{}\t{}\t{}\n".format(new_pr[0], new_pr[1], new_pr[2], new_pr[3]))
+    print("**\n")
+
+    print("{}:\t{}".format(standard0[0], standard0[1]))
+    print("{}:\t{}".format(standard1[0], standard1[1]))
+    print("{}:\t{}".format(standard2[0], standard2[1]))
+    print("{}:\t{}".format(standard3[0], standard3[1]))
+
+m()
