@@ -82,7 +82,7 @@ def get_standard(course, t, pts):
     return c.fetchone()
 
 ##################################
-def m():
+def submit():
     # gather data
     query_add_submission = ("INSERT INTO submission (date, course, type, time, comment) "
                       "VALUES (%s, %s, %s, %s, %s)")
@@ -124,4 +124,3 @@ def m():
     print("{}:\t{}".format(standard2[0], standard2[1]))
     print("{}:\t{}".format(standard3[0], standard3[1]))
 
-m()

@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+import sys
+from commands.submit import submit
+
+
+def main():
+
+    commands = {
+        'submit': submit
+    }
+
+    if len(sys.argv) != 2:
+        print_usage()
+        exit()
+
+    arg = sys.argv[1]
+
+    if arg in commands:
+        commands[arg]()
+    else:
+        print_usage()
+        exit()
+
+def print_usage():
+    print('Usage: {} [command]'.format(sys.argv[0]))
+
+main()
