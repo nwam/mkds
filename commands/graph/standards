@@ -61,7 +61,7 @@ def get_comment():
 
 # return (time,standard,pts,date) of the requested PR
 def get_pr(course, t):
-    query_pr = ("SELECT time, standard, pts, date FROM PR WHERE course=%s AND type=%s")
+    query_pr = ("SELECT time, standard, pts, date FROM PRs WHERE course=%s AND type=%s")
     data_pr = (course, t)
 
     db = MySQLdb.connect(user="root", db="mkds")
