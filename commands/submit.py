@@ -9,7 +9,7 @@ def get_date():
 
     # current date
     if date == "":
-        date = formatted_date(today.year, today.month, today.day)
+        date = "{}-{}-{} {}:{}:{}".format(today.year, today.month, today.day, today.hour, today.minute, today.second)
 
     # relative date
     if date[0] == "-":
