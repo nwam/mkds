@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 import sys
-from commands.submit import submit
+from command.submit import submit
+from command import standards
 
 
 def main():
 
     commands = {
-        'submit': submit
+        'submit': submit,
+        'standards': standards.graph
     }
 
     if len(sys.argv) != 2:
