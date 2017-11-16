@@ -1,10 +1,22 @@
 import MySQLdb
+import pandas as pd
 
-def query(q):
+# Returns the list obtained from the query if columns aren't specified
+# Returns a pandas.DataFrame if columns are specified
+def query(q, cols=None):
     cursor = MySQLdb.connect(user='root', db='mkds').cursor()
 
     cursor.execute(q)
-    return cursor.fetchall()
+
+    query_response = cursor.fetchall()
+
+    if cols == None:
+        return query_response
+
+    return pd.DataFrame(  data = [[ij for ij in i] for i in query_response], 
+                        columns = cols)
+
+
 
 # commits after query, returns number of rows changed
 def transact(q):
