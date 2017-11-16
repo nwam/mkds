@@ -71,6 +71,10 @@ def graph_progression(start_date = datetime.date(2017,10,1), end_date = datetime
 
     # Plot
     plt.imshow(progression)
+    plt.xticks([pts_name[0] for pts_name in pts_names], [pts_name[1] for pts_name in pts_names], rotation='vertical')
+    plt.title('MKDS Progressive Standards')
+    plt.xlabel('standard')
+    plt.ylabel('delta days')
     plt.show()
 
 
