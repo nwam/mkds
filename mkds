@@ -9,7 +9,8 @@ def main():
 
     commands = {
         'submit': submit,
-        'standards': standards.graph
+        'standards': standards.graph,
+        'standardsp': standards.graph_progression
     }
 
     if len(sys.argv) != 2:

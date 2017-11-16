@@ -22,6 +22,10 @@ def pr_at_date(d):
     q = """SELECT submissionID, date, courseID, course, type, time, standard, pts, comment FROM submission_plus INNER JOIN (SELECT MAX(submissionID) AS prIdAtDate FROM submission_plus WHERE date <= DATE('{}') GROUP BY course,type) AS q ON q.prIdAtDate = submission_plus.submissionID ORDER BY courseID, type""".format(d)
     return mkdsdb.query(q, ('submissionID', 'date', 'coourseID', 'course', 'type', 'time', 'standard', 'pts', 'comment'))
 
+def standard_name():
+    q = """SELECT pts, name FROM standard_name"""
+    return mkdsdb.query(q)
+
 def graph():
     # Query data
     df = pr_standards()
@@ -45,9 +49,31 @@ def graph():
 
     plt.show()
 
-#def graph_progression(start_date, end_date):
-    # Query data
+def graph_progression(start_date = datetime.date(2017,10,1), end_date = datetime.date.today()):
+    pts_names = standard_name()
+    num_days = (end_date - start_date).days
 
-    # Convert to pandas df
+    progression = np.zeros((num_days, len(pts_names)))
 
-    # Correct dataA
+    # Iterate dates
+    for d in daterange(start_date, end_date):
+        # Query data
+        df = pr_at_date(d) 
+
+        # Count pts
+        df = df.groupby('pts').count()['standard']
+
+        # Append to list
+        day_num = (d - start_date).days
+        for pts,pts_count in df.iteritems():
+            progression[day_num][pts] = pts_count
+        
+
+    # Plot
+    plt.imshow(progression)
+    plt.show()
+
+
+def daterange(start_date, end_date):
+    for n in range(int ((end_date - start_date).days)):
+        yield start_date + datetime.timedelta(n)
